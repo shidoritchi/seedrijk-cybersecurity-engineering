@@ -1,22 +1,37 @@
 {
   "meta": {
     "project": "Seedrijk Cybersecurity Engineering",
-    "start_date": "2026-02-07",
+    "version": "1.0",
     "metrics_authority": "json",
-    "last_updated": "2026-02-09T11:04"
+    "last_updated": "2026-02-09T11:04",
+    "description": "Schema for all metrics in the 100-Day Boot and Journal"
   },
   "days": {
-    "2026-02-07-Day000": {
+    "Day000": {
       "type": "setup",
       "xp": 15,
       "time_hours": 2.0,
       "finance_usd": 0,
       "notes": "Repository structure, journal design, metrics architecture"
+    },
+    "Day001": {
+      "type": "execution",
+      "xp": 0,
+      "time_hours": 0.0,
+      "finance_usd": 0,
+      "notes": "First real day of execution"
     }
   },
   "totals": {
     "xp": 15,
     "time_hours": 2.0,
     "finance_usd": 0
+  },
+  "fields": {
+    "xp": "integer, total XP earned per day",
+    "finance_usd": "integer, money spent in USD per day",
+    "time_hours": "float, hours spent per day",
+    "notes": "string, optional notes or observations",
+    "type": "string, either setup or execution"
   }
 }

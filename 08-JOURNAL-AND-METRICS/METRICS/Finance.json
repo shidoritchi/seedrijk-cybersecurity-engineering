@@ -1,24 +1,22 @@
 {
-  "total_xp": 40,
+  "total_finance": 0,
   "days": {
     "Day000": {
-      "xp": 20,
-      "time": 5,
-      "finance": 0
+      "finance": 0,
+      "notes": "Setup - no expenses"
     },
     "Day001": {
-      "xp": 20,
-      "time": 2,
-      "finance": 0
+      "finance": 0,
+      "notes": "Execution start"
     },
     "2026-02-07-Day000": {
-      "xp": 0
+      "spent": 0
     },
     "2026-02-09-Day001": {
-      "xp": 0
+      "spent": 0
     },
     "WEEK-01-Resume": {
-      "xp": 0
+      "spent": 0
     }
   },
   "meta": {

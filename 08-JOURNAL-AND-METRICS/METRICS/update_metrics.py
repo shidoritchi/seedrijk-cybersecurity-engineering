@@ -1,54 +1,88 @@
 """
-update_metrics.py
+update_metrics.py - Fusion MD → JSON + totaux globaux
 
 ROLE
 ----
-Recalculer les métriques globales (XP, temps, finance)
-à partir du fichier metrics.json qui est la SOURCE DE VÉRITÉ.
+Automatiser la mise à jour des métriques à partir des fichiers Markdown du journal.
 
-IMPORTANT
----------
-- Les fichiers Markdown sont uniquement descriptifs (lecture humaine)
-- AUCUNE donnée ne doit être calculée depuis les .md
+SOURCE DE VÉRITÉ
+-----------------
+- Les fichiers Markdown sont descriptifs et lisibles par l'humain
+- Les fichiers JSON sont autoritatifs pour automatisation et calculs
+
+FICHIERS GÉNÉRÉS
+----------------
+- XP.json
+- Finance.json
+- Time.json
 """
 
 import json
+import re
 from pathlib import Path
 from datetime import datetime
 
-# 📍 Chemin vers le fichier JSON maître
-METRICS_FILE = Path("08-JOURNAL-AND-METRICS/METRICS/metrics.json")
+# 📍 Chemins (dynamiques, fonctionnent depuis n'importe où)
+SCRIPT_DIR = Path(__file__).parent.resolve()  # Dossier du script
+REPO_ROOT = SCRIPT_DIR.parent.parent  # Racine du repo (2 niveaux au-dessus)
 
-# 🛑 Sécurité : le fichier doit exister
-if not METRICS_FILE.exists():
-    raise FileNotFoundError("metrics.json not found. Metrics authority is missing.")
+JOURNAL_DIR = REPO_ROOT / "08-JOURNAL-AND-METRICS" / "2026-02"
+METRICS_DIR = SCRIPT_DIR  # Le script est déjà dans METRICS/
 
-# 📥 Chargement des données
-data = json.loads(METRICS_FILE.read_text())
+METRICS_XP = METRICS_DIR / "XP.json"
+METRICS_FINANCE = METRICS_DIR / "Finance.json"
+METRICS_TIME = METRICS_DIR / "Time.json"
 
-# 🔢 Initialisation des totaux
-total_xp = 0
-total_time = 0.0
-total_finance = 0
+# 🔹 Initialisation des dictionnaires JSON si fichiers inexistants
+def init_json(file_path, default_structure):
+    if file_path.exists():
+        return json.loads(file_path.read_text())
+    else:
+        return default_structure
 
-# 🔁 Parcours de chaque jour enregistré
-for day_id, day_data in data.get("days", {}).items():
-    total_xp += day_data.get("xp", 0)
-    total_time += day_data.get("time_hours", 0)
-    total_finance += day_data.get("finance_usd", 0)
+xp_data = init_json(METRICS_XP, {"total_xp": 0, "days": {}, "meta": {}})
+finance_data = init_json(METRICS_FINANCE, {"total_finance": 0, "days": {}, "meta": {}})
+time_data = init_json(METRICS_TIME, {"total_time": 0.0, "days": {}, "meta": {}})
 
-# 🧮 Mise à jour des totaux globaux
-data["totals"] = {
-    "xp": total_xp,
-    "time_hours": round(total_time, 2),
-    "finance_usd": total_finance
-}
 
-# 🕒 Mise à jour du timestamp
-data["meta"]["last_updated"] = datetime.now().isoformat(timespec="minutes")
+# 🔹 Parcours des fichiers Markdown
+for md_file in JOURNAL_DIR.glob("*.md"):
+    content = md_file.read_text()
 
-# 💾 Sauvegarde
-METRICS_FILE.write_text(json.dumps(data, indent=2))
+    day_key = md_file.stem  # ex: 2026-02-09-Day001
 
-print("✅ Metrics recalculated from authoritative JSON.")
+    # Extraction des valeurs depuis le Markdown
+    xp_match = re.search(r"\*\*XP potentiel bloc 1\*\*\s*:\s*(\d+)", content)
+    xp_match2 = re.search(r"\*\*XP potentiel bloc 2\*\*\s*:\s*(\d+)", content)
+    xp_val = int(xp_match.group(1)) if xp_match else 0
+    xp_val += int(xp_match2.group(1)) if xp_match2 else 0
 
+    finance_match = re.search(r"\*\*Investissement du jour\*\*\s*:\s*(\d+)", content)
+    finance_val = int(finance_match.group(1)) if finance_match else 0
+
+    time_match = re.search(r"\*\*Temps total investi aujourd'hui\*\*\s*:\s*~?([\d.]+)h", content)
+    time_val = float(time_match.group(1)) if time_match else 0.0
+
+    # 🔹 Mise à jour des fichiers JSON
+    xp_data["days"][day_key] = {"xp": xp_val}
+    finance_data["days"][day_key] = {"spent": finance_val}
+    time_data["days"][day_key] = {"hours": time_val}
+
+# 🔹 Calcul des totaux globaux
+xp_data["total_xp"] = sum(d.get("xp", 0) for d in xp_data["days"].values())
+finance_data["total_finance"] = sum(d.get("finance", 0) for d in finance_data["days"].values())
+time_data["total_time"] = round(sum(d.get("time", 0.0) for d in time_data["days"].values()), 2)
+
+
+# 🔹 Mise à jour du timestamp
+now_iso = datetime.now().isoformat(timespec="minutes")
+xp_data["meta"]["last_updated"] = now_iso
+finance_data["meta"]["last_updated"] = now_iso
+time_data["meta"]["last_updated"] = now_iso
+
+# 🔹 Écriture JSON
+METRICS_XP.write_text(json.dumps(xp_data, indent=2))
+METRICS_FINANCE.write_text(json.dumps(finance_data, indent=2))
+METRICS_TIME.write_text(json.dumps(time_data, indent=2))
+
+print("✅ Metrics updated: XP, Finance, Time")
