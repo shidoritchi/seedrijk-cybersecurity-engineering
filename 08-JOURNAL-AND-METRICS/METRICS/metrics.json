@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "project": "Seedrijk Cybersecurity Engineering",
+    "start_date": "2026-02-07",
+    "metrics_authority": "json",
+    "last_updated": "2026-02-09T11:04"
+  },
+  "days": {
+    "2026-02-07-Day000": {
+      "type": "setup",
+      "xp": 15,
+      "time_hours": 2.0,
+      "finance_usd": 0,
+      "notes": "Repository structure, journal design, metrics architecture"
+    }
+  },
+  "totals": {
+    "xp": 15,
+    "time_hours": 2.0,
+    "finance_usd": 0
+  }
+}

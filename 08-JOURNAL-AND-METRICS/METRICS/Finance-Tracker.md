@@ -1,13 +1,17 @@
-# Finance Tracker — Preliminary Notes
+# 💰 Finance Tracker — Overview
 
-## 2026-02-07 (Day0000)
-- Task: Setup / cockpit initialization
-- Reading: None
-- Actions: None
-- Investment: 0 USD
+⚠️ Authoritative data lives in `metrics.json`.
 
-## 2026-02-09 (Day001)
-- Task: Bitcoin Halving 2024 impact 2026 (15 min reading)
-- Action: Open free TradingView account
-- Investment: 0 USD
+## Strategy
+- Zero spending during setup phase
+- Focus on skills acquisition before monetization
+- Finance tracking starts Day001 (operational phase)
 
+## Current Status
+- Total spent: 0 USD
+- Budget breaches: None
+- Investment phase: Not started
+
+## Notes
+- Tools used are free (TryHackMe free tier, YouTube, GitHub)
+- First paid tools expected after Week 04

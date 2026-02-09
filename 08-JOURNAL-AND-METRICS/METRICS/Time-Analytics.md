@@ -1,11 +1,19 @@
-# Time Analytics — Preliminary Notes
+# ⏱️ Time Analytics — Overview
 
-## 2026-02-07 (Day0000)
-- Total time invested: ~2h (setup, directories, templates, VSCode tests)
-- Productive time: 2h
-- Notes: First setup of journal system and metrics structure
+⚠️ Source of truth: `metrics.json`
 
-## 2026-02-09 (Day001)
-- Planned time: ~8h
-- Time blocking: Afternoon 14h30-17h00, Evening 18h00-01h00
-- Notes: Tasks linked to 100-Day Boot, labs, courses, social, finance
+## Cadence Model
+- Weekdays: Deep work blocks
+- Weekend: compressed (1 day counted)
+- Anti-burnout enforced
+
+## Current Observations
+- Setup phase: ~2h/day
+- No optimization required yet
+- Focus is consistency, not volume
+
+## KPIs (to be automated)
+- Avg hours / day
+- XP per hour
+- Consistency rate
+
